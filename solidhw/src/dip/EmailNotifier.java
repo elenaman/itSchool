@@ -1,9 +1,9 @@
 package dip;
 
-public class EmailNotifier {
+public class EmailNotifier implements Notifier{
 
-    public void sendEmail(String message) {
+    @Override
+    public void sendMessage(String message) {
         System.out.println("Email sent: " + message);
     }
-
 }

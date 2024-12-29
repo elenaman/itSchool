@@ -2,13 +2,21 @@ package dip;
 
 public class NotificationService {
 
-    private EmailNotifier emailNotifier = new EmailNotifier();
+    private Notifier notifier;
+
+    public NotificationService(Notifier notifier) {
+        this.notifier = notifier;
+    }
+
+    public void setNotifier(Notifier notifier) {
+        this.notifier = notifier;
+    }
 
     public void notify(String message) {
 
         // validation and business logic here
 
-        emailNotifier.sendEmail(message);
+        notifier.sendMessage(message);
     }
 
 }
