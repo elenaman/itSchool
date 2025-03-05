@@ -21,7 +21,6 @@ public class IndividualService {
 
     public IndividualDto createIndividual(IndividualDto individual){
         Individual entity = individualMapper.mapToEntity(individual);
-
         return individualMapper.mapToDto(individualRepository.save(entity));
     }
 

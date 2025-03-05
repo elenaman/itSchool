@@ -13,7 +13,7 @@ public class Address {
 
 
     @ManyToOne
-    @JoinColumn(name = "individual_id", referencedColumnName = "individualId",nullable = false)
+    @JoinColumn(name = "individualId", referencedColumnName = "individualId")
     private Individual individual;
 
     private String country;

@@ -1,31 +1,48 @@
 package it.school.finalProject.mapper.impl;
 
-import it.school.finalProject.dto.IndividualDto;
+import it.school.finalProject.dto.AddressDto;
 import it.school.finalProject.mapper.ObjectMapper;
 import it.school.finalProject.persistence.entity.Address;
+import it.school.finalProject.persistence.entity.Individual;
+import it.school.finalProject.persistence.repository.IndividualRepository;
+import org.springframework.stereotype.Component;
 
-public class AddressMapper implements ObjectMapper<IndividualDto.AddressDto, Address> {
+@Component
+public class AddressMapper implements ObjectMapper<AddressDto, Address> {
+    private final IndividualRepository individualRepository;
+
+    public AddressMapper(IndividualRepository individualRepository) {
+        this.individualRepository = individualRepository;
+    }
     @Override
-    public IndividualDto.AddressDto mapToDto(Address address) {
-        return new IndividualDto.AddressDto(
+    public AddressDto mapToDto(Address address) {
+        return new AddressDto(
+                address.getAddressId(),
+                address.getIndividual().getIndividualId(),
+                address.getCountry(),
+                address.getCity(),
+                address.getZipCode(),
                 address.getAddressLine1(),
                 address.getAddressLine2(),
-                address.getZipCode(),
-                address.getCity(),
-                address.getCountry(),
                 address.getAddressType()
         );
     }
 
     @Override
-    public Address mapToEntity(IndividualDto.AddressDto addressDto) {
+    public Address mapToEntity(AddressDto addressDto) {
         Address address = new Address();
-        address.setAddressLine1(addressDto.getAddressLine1());
-        address.setAddressLine2(addressDto.getAddressLine2());
+        address.setAddressId(addressDto.getAddressId()); // Optional: If you're not auto-generating
+        address.setCountry(addressDto.getCountry());
         address.setCity(addressDto.getCity());
         address.setZipCode(addressDto.getZipCode());
-        address.setCountry(addressDto.getCountry());
+        address.setAddressLine1(addressDto.getAddressLine1());
+        address.setAddressLine2(addressDto.getAddressLine2());
         address.setAddressType(addressDto.getAddressType());
+        Individual individual = individualRepository.findById(addressDto.getIndividualId())
+                .orElseThrow(() -> new IllegalArgumentException("Individual with ID " + addressDto.getIndividualId() + " not found"));
+
+        address.setIndividual(individual);
+
 
         return address;
     }
