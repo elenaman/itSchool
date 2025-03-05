@@ -42,5 +42,9 @@ public class Individual {
     @OneToMany(mappedBy = "individual")
     private List<Address> address;
 
+    @JsonManagedReference
+    @OneToMany
+    private List<PhoneNumber> phoneNumber;
+
 
 }

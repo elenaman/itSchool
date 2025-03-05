@@ -12,7 +12,7 @@ public class PhoneNumber {
     private int phoneId;
 
     @ManyToOne
-    @JoinColumn(name = "individual_id", nullable = false)
+    @JoinColumn(name = "individualId", referencedColumnName = "individualId")
     private Individual individual;
 
     private String countryCode;
