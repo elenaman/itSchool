@@ -8,5 +8,8 @@ import java.util.List;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     List<Account> getAccountsByCurrency(String currency);
+
+    List<Account> findByIndividuals_IndividualId(int individualId);
+
 }
 

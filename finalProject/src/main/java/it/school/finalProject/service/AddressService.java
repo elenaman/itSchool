@@ -1,8 +1,10 @@
 package it.school.finalProject.service;
 
 import it.school.finalProject.dto.AddressDto;
+import it.school.finalProject.dto.IndividualDto;
 import it.school.finalProject.exception.ResourceNotFoundException;
 import it.school.finalProject.mapper.ObjectMapper;
+import it.school.finalProject.mapper.impl.IndividualMapper;
 import it.school.finalProject.persistence.entity.Address;
 import it.school.finalProject.persistence.repository.AddressRepository;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,14 @@ public class AddressService {
 
     private final AddressRepository addressRepository;
     private final ObjectMapper<AddressDto, Address> addressMapper;
+    private final IndividualMapper individualMapper;
 
 
-    public AddressService(AddressRepository addressRepository, ObjectMapper<AddressDto, Address> addressMapper) {
+
+    public AddressService(AddressRepository addressRepository, ObjectMapper<AddressDto, Address> addressMapper, IndividualMapper individualMapper) {
         this.addressRepository = addressRepository;
         this.addressMapper = addressMapper;
+        this.individualMapper = individualMapper;
     }
 
     public List<AddressDto> getAllAddresses() {
@@ -60,5 +65,31 @@ public class AddressService {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Address not found with ID: " + id));
         addressRepository.delete(address);
+    }
+
+    public List<AddressDto> getAddressesByIndividual(int individualId) {
+        List<Address> addresses = addressRepository.findByIndividual_IndividualId(individualId);
+
+        if (addresses.isEmpty()) {
+            throw new ResourceNotFoundException("No addresses found for individual with ID: " + individualId);
+        }
+
+        return addresses.stream()
+                .map(addressMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<IndividualDto> getIndividualsByCity(String city) {
+        List<Address> addresses = addressRepository.findByCity(city);
+
+        if (addresses.isEmpty()) {
+            throw new ResourceNotFoundException("No individuals found in city: " + city);
+        }
+
+        return addresses.stream()
+                .map(Address::getIndividual)
+                .distinct()
+                .map(individualMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 }

@@ -8,6 +8,8 @@ import it.school.finalProject.persistence.entity.Individual;
 import it.school.finalProject.persistence.repository.AccountRepository;
 import it.school.finalProject.persistence.repository.IndividualRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Set;
@@ -78,5 +80,37 @@ public class AccountService {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found with ID: " + id));
         accountRepository.delete(account);
+    }
+
+    public double getAccountBalance(int accountId) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + accountId));
+        return account.getBalance();
+    }
+
+    public List<AccountDto> getAccountsByIndividual(int individualId) {
+        return accountRepository.findByIndividuals_IndividualId(individualId)
+                .stream()
+                .map(accountMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void transferMoney(int fromAccountId, int toAccountId, double amount) {
+        Account fromAccount = accountRepository.findById(fromAccountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + fromAccountId));
+
+        Account toAccount = accountRepository.findById(toAccountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + toAccountId));
+
+        if (fromAccount.getBalance() < amount) {
+            throw new IllegalStateException("Insufficient funds in account " + fromAccountId);
+        }
+
+        fromAccount.setBalance(fromAccount.getBalance() - amount);
+        toAccount.setBalance(toAccount.getBalance() + amount);
+
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
     }
 }

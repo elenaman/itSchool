@@ -23,7 +23,7 @@ public class Account {
 
     @ManyToMany
     @JoinTable(
-            name = "individual_account", // Join table name
+            name = "individual_X_account", // Join table name
             joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "accountId"), // Reference to Account
             inverseJoinColumns = @JoinColumn(name = "individual_id", referencedColumnName = "individualId") // Reference to Individual
     )

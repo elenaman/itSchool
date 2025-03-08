@@ -1,6 +1,7 @@
 package it.school.finalProject.controller;
 
 import it.school.finalProject.dto.AccountDto;
+import it.school.finalProject.dto.TransferRequest;
 import it.school.finalProject.service.AccountService;
 import it.school.finalProject.validator.AccountValidator;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +47,22 @@ public class AccountController {
     public ResponseEntity<String> deleteAccount(@PathVariable int id) {
         accountService.deleteAccount(id);
         return ResponseEntity.ok("Account deleted successfully.");
+    }
+
+    @GetMapping("/{id}/balance")
+    public ResponseEntity<Double> getAccountBalance(@PathVariable int id) {
+        double balance = accountService.getAccountBalance(id);
+        return ResponseEntity.ok(balance);
+    }
+
+    @GetMapping("/by-individual/{individualId}")
+    public ResponseEntity<List<AccountDto>> getAccountsByIndividual(@PathVariable int individualId) {
+        return ResponseEntity.ok(accountService.getAccountsByIndividual(individualId));
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<String> transferMoney(@RequestBody TransferRequest transferRequest) {
+        accountService.transferMoney(transferRequest.getFromAccountId(), transferRequest.getToAccountId(), transferRequest.getAmount());
+        return ResponseEntity.ok("Transfer successful.");
     }
 }

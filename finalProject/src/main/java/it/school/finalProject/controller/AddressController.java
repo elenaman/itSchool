@@ -1,7 +1,9 @@
 package it.school.finalProject.controller;
 
 import it.school.finalProject.dto.AddressDto;
+import it.school.finalProject.dto.IndividualDto;
 import it.school.finalProject.service.AddressService;
+import it.school.finalProject.service.IndividualService;
 import it.school.finalProject.validator.AddressValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,12 @@ public class AddressController {
 
     private final AddressService addressService;
     private final AddressValidator addressValidator;
+    private final IndividualService individualService;
 
-    public AddressController(AddressService addressService, AddressValidator addressValidator) {
+    public AddressController(AddressService addressService, AddressValidator addressValidator, IndividualService individualService) {
         this.addressService = addressService;
         this.addressValidator = addressValidator;
+        this.individualService = individualService;
     }
 
     @GetMapping
@@ -47,5 +51,18 @@ public class AddressController {
         addressService.deleteAddress(id);
         return ResponseEntity.ok("Address deleted successfully.");
     }
+
+    @GetMapping("/by-individual/{individualId}")
+    public ResponseEntity<List<AddressDto>> getAddressesByIndividual(@PathVariable int individualId) {
+        return ResponseEntity.ok(addressService.getAddressesByIndividual(individualId));
+    }
+
+    @GetMapping("/by-city")
+    public ResponseEntity<List<IndividualDto>> getIndividualsByCity(@RequestParam String city) {
+        return ResponseEntity.ok(addressService.getIndividualsByCity(city));
+    }
+
+
+
 
 }

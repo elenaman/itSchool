@@ -8,4 +8,9 @@ import java.util.List;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Integer> {
     List<Address> getAddressesByCity(String city);
+
+    List<Address> findByIndividual_IndividualId(int individualId);
+
+    List<Address> findByCity(String city);
+
 }
