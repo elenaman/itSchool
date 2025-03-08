@@ -1,12 +1,9 @@
 package it.school.finalProject.persistence.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
+import java.util.Set;
 import java.util.List;
 
 @Entity
@@ -23,28 +20,16 @@ public class Individual {
     private boolean isMemberActive;
     private String dateJoined;
 
-
-
-    public String getDateJoined(){
-        return dateJoined;
-    }
-
-    public boolean isMemberActive(){
-        return isMemberActive;
-    }
-
-    @JsonBackReference
     @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "individualDocumentId", referencedColumnName = "documentId")
     private IdentificationDocument identificationDocument;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "individual")
     private List<Address> address;
 
-    @JsonManagedReference
-    @OneToMany
+    @OneToMany(mappedBy = "individual")
     private List<PhoneNumber> phoneNumber;
 
-
+    @ManyToMany(mappedBy = "individuals") // No @JoinTable here!
+    private Set<Account> accounts;
 }
