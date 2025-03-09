@@ -2,7 +2,7 @@ package it.school.finalProject.service;
 
 import it.school.finalProject.dto.TransactionDto;
 import it.school.finalProject.exception.ResourceNotFoundException;
-import it.school.finalProject.mapper.TransactionMapper;
+import it.school.finalProject.mapper.impl.TransactionMapper;
 import it.school.finalProject.persistence.entity.Account;
 import it.school.finalProject.persistence.entity.Transaction;
 import it.school.finalProject.persistence.repository.AccountRepository;
